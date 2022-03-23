@@ -280,9 +280,9 @@ void modificaestoque(Materiais *M)
         printf("=========================================\n");
         printf("|A empresa esta com os Seguinte produtos|\n");
         printf("-----------------------------------------\n");
-        printf("|Tijolos: %d un|\n|Porcelanato: %d m2|\n", M->Tijolo, M->porcelanato);
-        printf("|Sacos de cimento: %d un|\n|Sacos de Argamassa: %d un|\n", M->saco_cimento, M->saco_argamassa);
-        printf("|Vergalhoes: %d un|\n", M->vergalhoes);
+        printf("|Tijolos: %27d un|\n|Porcelanato: %23d m2|\n", M->Tijolo, M->porcelanato);
+        printf("|Sacos de cimento: %18d un|\n|Sacos de Argamassa: %16d un|\n", M->saco_cimento, M->saco_argamassa);
+        printf("|Vergalhoes: %24d un|\n", M->vergalhoes);
         printf("=========================================\n");
         printf("| QUAL PRODUTO DESEJA ALTERAR O ESTOQUE |\n");
         printf("-----------------------------------------\n");
@@ -466,7 +466,6 @@ void gerar_orcamento_txt(int qtd[5], Preco *pr, int cad, Pessoas T[])
     fprintf(file, "                                                                   \n");
     fprintf(file, "_________________________          ________________________________\n");
 
-
     char opcao;
     fclose(file);
     while (1)
@@ -503,7 +502,7 @@ void add(Materiais *M, Pessoas T[], Preco *pr)
     system("cls");
     float valor = 0;
     int material, buscpf;
-    int qntd,product[5] = {0, 0, 0, 0, 0};
+    int qntd, product[5] = {0, 0, 0, 0, 0};
     char busccpf[14], escolha;
     while (1)
     {
@@ -892,21 +891,22 @@ void editar(struct Pessoas T[])
     }
 }
 
-void excluir(struct Pessoas T[])
+void excluir(struct Pessoas T[]) // LUCAS
 {
     system("cls");
     int ID, opcao;
-    printf("Digite o Numero de indetificacao do clitente cadastrado!!\n");
+    printf("Digite o Numero de indetificacao do cliente cadastrado!!\n");
     printf("ID : ");
     scanf("%d", &ID);
     system("cls");
     printf("Editando a Conta ID: %d\n", ID);
-    printf("Selecione o dado que ddeseja excluir!!\n");
+    printf("Selecione o dado que deseja excluir!!\n");
     printf("1- Nome\n");
     printf("2- CPF\n");
     printf("3- endereco\n");
     printf("4- telefone\n");
-    printf("5- Sair\n");
+    printf("5- Excluir Usuario\n");
+    printf("6- Sair\n");
 
     printf(":");
     scanf("%d", &opcao);
@@ -918,23 +918,37 @@ void excluir(struct Pessoas T[])
             printf("Nome removido!!");
             strcpy(T[ID].Nome, "Sem dado");
             system("cls");
+            break;
         }
         if (opcao == 2)
+        {
             printf("CPF removido!!");
-        strcpy(T[ID].Cpf, "0");
-        system("cls");
-        break;
+            strcpy(T[ID].Cpf, "00000000000");
+            system("cls");
+            break;
+        }
         if (opcao == 3)
+        {
             printf("endereco removido!!");
-        strcpy(T[ID].Endereco, "Sem dado");
-        system("cls");
-        break;
+            strcpy(T[ID].Endereco, "Sem dado");
+            system("cls");
+            break;
+        }
         if (opcao == 4)
+        {
             printf("telefone removido!!");
-        strcpy(T[ID].Telefone, "0");
-        system("cls");
-        break;
+            strcpy(T[ID].Telefone, "00000000000");
+            system("cls");
+            break;
+        }
         if (opcao == 5)
+        {
+            printf("Usuario Removido!!");
+            T[ID].ID = 0;
+            system("cls");
+            break;
+        }
+        if (opcao == 6)
             break;
         if (opcao != 1 && opcao != 2 && opcao != 3 && opcao != 4 && opcao != 5) // SE nenhuma das opçoes acontecer
             system("cls");
@@ -942,7 +956,7 @@ void excluir(struct Pessoas T[])
     }
 }
 
-void mostra(struct Pessoas T[]) // imprime todas as pessoas que o programa tem
+void mostra(struct Pessoas T[]) // LUCAS  imprime todas as pessoas que o programa tem
 {
     system("cls");
     int ID;
@@ -964,7 +978,7 @@ void mostra(struct Pessoas T[]) // imprime todas as pessoas que o programa tem
     system("cls");
 }
 
-void mostra1(struct Pessoas T[])
+void mostra1(struct Pessoas T[]) // BERNARDO
 {
     system("cls");
     while (1)
