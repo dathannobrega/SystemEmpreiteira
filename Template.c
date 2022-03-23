@@ -88,7 +88,7 @@ int buscaCPF(char a[], struct Pessoas T[]) //! PESQUISAR CPF NA STRUCT
     return -1; // SE nao AChar vai retornar -1
 };
 
-int buscaID(int ID, struct Pessoas T[]) //! PESQUISAR CPF NA STRUCT
+int buscaID(int ID, struct Pessoas T[]) //! PESQUISAR ID NA STRUCT
 {
     int i;
     for (i = 0; i < MAXUSER; i++)
@@ -99,7 +99,7 @@ int buscaID(int ID, struct Pessoas T[]) //! PESQUISAR CPF NA STRUCT
     return -1; // SE nao AChar vai retornar -1
 };
 
-int buscaNome(char nome[], struct Pessoas T[]) //! PESQUISAR CPF NA STRUCT
+int buscaNome(char nome[], struct Pessoas T[]) //! PESQUISAR NOME NA STRUCT
 {
     int i;
     for (i = 0; i < MAXUSER; i++)
@@ -184,7 +184,7 @@ void salvar(Pessoas P[], Materiais M, Preco pr) //!!!!!!!!!FUNÇAO QUE Salva Tod
     fclose(fproduct);
 }
 
-void ajustepreco(Preco pr)
+void ajustepreco(Preco *pr)
 {
     while (1)
     {
@@ -196,9 +196,9 @@ void ajustepreco(Preco pr)
         printf("=========================================\n");
         printf("|A empresa esta com os Seguinte produtos|\n");
         printf("-----------------------------------------\n");
-        printf("|Tijolos: R$%5.2f|\n|Porcelanato: R$%5.2f|\n", pr.Tijolo_price, pr.porcelanato_price);
-        printf("|Sacos de cimento: R$%5.2f|\n|Sacos de Argamassa: R$%5.2f|\n", pr.saco_cimento_price, pr.saco_argamassa_price);
-        printf("|Vergalhoes: R$%5.2f|\n", pr.vergalhoes_price);
+        printf("|Tijolos: R$%5.2f|\n|Porcelanato: R$%5.2f|\n", pr->Tijolo_price, pr->porcelanato_price);
+        printf("|Sacos de cimento: R$%5.2f|\n|Sacos de Argamassa: R$%5.2f|\n", pr->saco_cimento_price, pr->saco_argamassa_price);
+        printf("|Vergalhoes: R$%5.2f|\n", pr->vergalhoes_price);
         printf("=========================================\n");
         printf("|      QUAL PRECO DESEJA MODIFICAR?     |\n");
         printf("-----------------------------------------\n");
@@ -219,7 +219,7 @@ void ajustepreco(Preco pr)
             printf("=========================================\n");
             printf("Qual o Novo Valor do Tijolo?");
             scanf("%f", &newvalue);
-            pr.Tijolo_price = newvalue;
+            pr->Tijolo_price = newvalue;
         }
         if (opcao == 2)
         {
@@ -229,7 +229,7 @@ void ajustepreco(Preco pr)
             printf("=========================================\n");
             printf("Qual o Novo Valor do Porcelanato?");
             scanf("%f", &newvalue);
-            pr.porcelanato_price = newvalue;
+            pr->porcelanato_price = newvalue;
         }
         if (opcao == 3)
         {
@@ -239,7 +239,7 @@ void ajustepreco(Preco pr)
             printf("=========================================\n");
             printf("Qual o Novo Valor do Saco de Cimento?");
             scanf("%f", &newvalue);
-            pr.saco_cimento_price = newvalue;
+            pr->saco_cimento_price = newvalue;
         }
         if (opcao == 4)
         {
@@ -249,7 +249,7 @@ void ajustepreco(Preco pr)
             printf("=========================================\n");
             printf("Qual o Novo Valor do Saco de Argamassa?");
             scanf("%f", &newvalue);
-            pr.saco_argamassa_price = newvalue;
+            pr->saco_argamassa_price = newvalue;
         }
         if (opcao == 5)
         {
@@ -259,7 +259,7 @@ void ajustepreco(Preco pr)
             printf("=========================================\n");
             printf("Qual o Novo Valor do Vergalhao?");
             scanf("%f", &newvalue);
-            pr.vergalhoes_price = newvalue;
+            pr->vergalhoes_price = newvalue;
         }
         if (opcao == 9)
         {
@@ -352,7 +352,7 @@ void modificaestoque(Materiais *M)
     }
 }
 
-void consultarestoque(Materiais *M, Preco pr, int tipo_consulta)
+void consultarestoque(Materiais *M, Preco *pr, int tipo_consulta)
 {
     while (1)
     {
@@ -407,27 +407,28 @@ void consultarestoque(Materiais *M, Preco pr, int tipo_consulta)
     }
 }
 
-void gerar_orcamento_txt(float qtd[5], Preco *pr, int cad, Pessoas T[])
+void gerar_orcamento_txt(int qtd[5], Preco *pr, int cad, Pessoas T[])
 {
     // APARECER NA TELA
+    printf("--------------------------------------|--------------|---------------------------------\n");
     printf("DESTINATARIO/REMETENTE                |CPF           |TELEFONE                         \n");
     printf("--------------------------------------|--------------|---------------------------------\n");
-    printf("%s                        |%s   |%s                     \n", T[cad].Nome, T[cad].Cpf, T[cad].Telefone);
+    printf("%38s|%14s|                 %15s|      \n", T[cad].Nome, T[cad].Cpf, T[cad].Telefone);
     printf("______________________________________|______________|_________________________________\n");
     printf("---------------------------------------------------------------------------------------\n");
     printf("---------------------------------------------------------------------------------------\n");
     printf("_______________________________________________________________________________________\n");
     printf("|                    ITEM                    |   QTD     |   PRECO UN    |    TOTAL   |\n");
     printf("|--------------------------------------------|-----------|---------------|------------|\n");
-    printf("|Tijolo                                      |           | R$ %11.2f| R$ %8.2f|\n", pr->Tijolo_price, pr->Tijolo_price * qtd[0]);
+    printf("|Tijolo                                      | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[0], pr->Tijolo_price, pr->Tijolo_price * qtd[0]);
     printf("|--------------------------------------------|-----------|---------------|------------|\n");
-    printf("|Piso de Porcelanato                         |           | R$ %11.2f| R$ %8.2f|\n", pr->porcelanato_price, pr->porcelanato_price * qtd[1]);
+    printf("|Piso de Porcelanato                         | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[1], pr->porcelanato_price, pr->porcelanato_price * qtd[1]);
     printf("|--------------------------------------------|-----------|---------------|------------|\n");
-    printf("|Saco de Cimento                             |           | R$ %11.2f| R$ %8.2f|\n", pr->saco_cimento_price, pr->saco_cimento_price * qtd[2]);
+    printf("|Saco de Cimento                             | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[2], pr->saco_cimento_price, pr->saco_cimento_price * qtd[2]);
     printf("|--------------------------------------------|-----------|---------------|------------|\n");
-    printf("|Saco de Argamassa                           |           | R$ %11.2f| R$ %8.2f|\n", pr->saco_argamassa_price, pr->saco_argamassa_price * qtd[3]);
+    printf("|Saco de Argamassa                           | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[3], pr->saco_argamassa_price, pr->saco_argamassa_price * qtd[3]);
     printf("|--------------------------------------------|-----------|---------------|------------|\n");
-    printf("|Vergalhoes                                  |           | R$ %11.2f| R$ %8.2f|\n", pr->vergalhoes_price, pr->vergalhoes_price * qtd[4]);
+    printf("|Vergalhoes                                  | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[4], pr->vergalhoes_price, pr->vergalhoes_price * qtd[4]);
     printf("|--------------------------------------------|-----------|---------------|------------|\n");
     printf("|--------------------------------------------|-----------|---------------|------------|\n");
     printf("|TOTAL                                       |           |               | R$ %8.2f|\n", pr->vergalhoes_price * qtd[4] + (pr->saco_argamassa_price * qtd[3]) + (pr->saco_cimento_price * qtd[2]) + pr->porcelanato_price * qtd[1] + pr->Tijolo_price * qtd[0]);
@@ -438,48 +439,71 @@ void gerar_orcamento_txt(float qtd[5], Preco *pr, int cad, Pessoas T[])
     printf("__________________________________           __________________________________________\n");
 
     FILE *file = fopen("orcamento.txt", "w");
-    fprintf(file, "DESTINATARIO/REMETENTE                |CPF           |TELEFONE                         \n");
-    fprintf(file, "--------------------------------------|--------------|---------------------------------\n");
-    fprintf(file, "%s                        |%s   |%s                     \n", T[cad].Nome, T[cad].Cpf, T[cad].Telefone);
-    fprintf(file, "______________________________________|______________|_________________________________\n");
-    fprintf(file, "---------------------------------------------------------------------------------------\n");
-    fprintf(file, "---------------------------------------------------------------------------------------\n");
-    fprintf(file, "_______________________________________________________________________________________\n");
-    fprintf(file, "|                    ITEM                    |   QTD     |   PRECO UN    |    TOTAL   |\n");
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "|Tijolo                                      |           | R$ %11.2f| R$ %8.2f|\n", pr->Tijolo_price, pr->Tijolo_price * qtd[0]);
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "|Piso de Porcelanato                         |           | R$ %11.2f| R$ %8.2f|\n", pr->porcelanato_price, pr->porcelanato_price * qtd[1]);
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "|Saco de Cimento                             |           | R$ %11.2f| R$ %8.2f|\n", pr->saco_cimento_price, pr->saco_cimento_price * qtd[2]);
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "|Saco de Argamassa                           |           | R$ %11.2f| R$ %8.2f|\n", pr->saco_argamassa_price, pr->saco_argamassa_price * qtd[3]);
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "|Vergalhoes                                  |           | R$ %11.2f| R$ %8.2f|\n", pr->vergalhoes_price, pr->vergalhoes_price * qtd[4]);
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "|TOTAL                                       |           |               | R$ %8.2f|\n", pr->vergalhoes_price * qtd[4] + (pr->saco_argamassa_price * qtd[3]) + (pr->saco_cimento_price * qtd[2]) + pr->porcelanato_price * qtd[1] + pr->Tijolo_price * qtd[0]);
-    fprintf(file, "|--------------------------------------------|-----------|---------------|------------|\n");
-    fprintf(file, "                                                                                       \n");
-    fprintf(file, " Assinatura Cliente:                         Assinatura Vendedor:                      \n");
-    fprintf(file, "                                                                                       \n");
-    fprintf(file, "__________________________________           __________________________________________\n");
+    fprintf(file, "--------------------------------------|--------------|-------------\n");
+    fprintf(file, "DESTINATARIO/REMETENTE                |CPF           |TELEFONE     \n");
+    fprintf(file, "--------------------------------------|--------------|-------------\n");
+    fprintf(file, "%38s|%14s|%11s|\n", T[cad].Nome, T[cad].Cpf, T[cad].Telefone);
+    fprintf(file, "______________________________________|______________|_____________\n");
+    fprintf(file, "-------------------------------------------------------------------\n");
+    fprintf(file, "___________________________________________________________________\n");
+    fprintf(file, "|          ITEM          |   QTD     |   PRECO UN    |    TOTAL   |\n");
+    fprintf(file, "|------------------------|-----------|---------------|------------|\n");
+    fprintf(file, "|Tijolo                  | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[0], pr->Tijolo_price, pr->Tijolo_price * qtd[0]);
+    fprintf(file, "|------------------------|-----------|---------------|------------|\n");
+    fprintf(file, "|Piso de Porcelanato     | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[1], pr->porcelanato_price, pr->porcelanato_price * qtd[1]);
+    fprintf(file, "|------------------------|-----------|---------------|------------|\n");
+    fprintf(file, "|Saco de Cimento         | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[2], pr->saco_cimento_price, pr->saco_cimento_price * qtd[2]);
+    fprintf(file, "|------------------------|-----------|---------------|------------|\n");
+    fprintf(file, "|Saco de Argamassa       | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[3], pr->saco_argamassa_price, pr->saco_argamassa_price * qtd[3]);
+    fprintf(file, "|------------------------|-----------|---------------|------------|\n");
+    fprintf(file, "|Vergalhoes              | UN %7d| R$ %11.2f| R$ %8.2f|\n", qtd[4], pr->vergalhoes_price, pr->vergalhoes_price * qtd[4]);
+    fprintf(file, "|------------------------|-----------|---------------|------------|\n");
+    fprintf(file, "|------------------------|-----------|---------------|------------|\n");
+    fprintf(file, "|TOTAL                   |           |               | R$ %8.2f|\n", pr->vergalhoes_price * qtd[4] + (pr->saco_argamassa_price * qtd[3]) + (pr->saco_cimento_price * qtd[2]) + pr->porcelanato_price * qtd[1] + pr->Tijolo_price * qtd[0]);
+    fprintf(file, "|------------------------|-----------|---------------|------------|\n");
+    fprintf(file, "                                                                   \n");
+    fprintf(file, " Assinatura Cliente:               Assinatura Vendedor:            \n");
+    fprintf(file, "                                                                   \n");
+    fprintf(file, "_________________________          ________________________________\n");
 
+
+    char opcao;
     fclose(file);
-    system("notepad /p orcamento.txt");
+    while (1)
+    {
+        setbuf(stdin, NULL);
+        printf("\n===================================\n");
+        printf("Deseja Imprimir o Orcamento? [S/N]\n");
+        printf("===================================\n");
+        scanf("%c", &opcao);
+        if (opcao == 'S')
+        {
+            system("notepad /p orcamento.txt ");
+            break;
+        }
+        else if (opcao == 'N')
+        {
+            break;
+        }
+        else
+        {
+            printf("OPCAO INVALIDA!!\n");
+            system("pause");
+            continue;
+        }
+    }
 }
 
-void add(Materiais M, Pessoas T[], Preco pr)
+void add(Materiais *M, Pessoas T[], Preco *pr)
 {
     //=======DECLARANDO FUNÇOES=======================
     void cadastro(Pessoas T[]);
     // ======Declarando as funçoes que serao usadas===
 
     system("cls");
-    float valor = 0, product[5] = {0, 0, 0, 0, 0};
+    float valor = 0;
     int material, buscpf;
-    int qntd;
+    int qntd,product[5] = {0, 0, 0, 0, 0};
     char busccpf[14], escolha;
     while (1)
     {
@@ -543,7 +567,7 @@ void add(Materiais M, Pessoas T[], Preco pr)
                 printf("0- VOLTAR\n");
                 setbuf(stdin, NULL);
                 scanf("%d", &qntd);
-                if (qntd > M.Tijolo)
+                if (qntd > M->Tijolo)
                 {
                     escolha = 'V'; // Reseta a escolha para segunda parte.
                     printf("Nao ha estoque para esse pedido!\n");
@@ -552,7 +576,7 @@ void add(Materiais M, Pessoas T[], Preco pr)
                     scanf("%c", &escolha);
                     if (escolha == 'S')
                     {
-                        consultarestoque(&M, pr, 1);
+                        consultarestoque(M, pr, 1);
                         continue;
                     }
                     continue;
@@ -561,9 +585,9 @@ void add(Materiais M, Pessoas T[], Preco pr)
                 }
                 else
                 {
-                    valor += pr.Tijolo_price * qntd;
+                    valor += pr->Tijolo_price * qntd;
                     product[0] += qntd;
-                    M.Tijolo -= qntd;
+                    M->Tijolo -= qntd;
                     break;
                 }
             }
@@ -577,22 +601,22 @@ void add(Materiais M, Pessoas T[], Preco pr)
                 printf("Quantos m2 de porcelanato o Cliente precisa?\n");
                 printf("0- VOLTAR\n");
                 scanf("%d", &qntd);
-                if (qntd > M.porcelanato)
+                if (qntd > M->porcelanato)
                 {
                     printf("Nao ha estoque para esse pedido!\n");
                     printf("Deseja Verificar seu Estoque? [S/N]\n");
                     setbuf(stdin, NULL);
                     scanf("%c", &escolha);
                     if (escolha == 'S')
-                        consultarestoque(&M, pr, 1);
+                        consultarestoque(M, pr, 1);
                     if (escolha == 'N')
                         continue;
                 }
                 else
                 {
-                    valor += pr.porcelanato_price * qntd;
+                    valor += pr->porcelanato_price * qntd;
                     product[1] += qntd;
-                    M.porcelanato -= qntd;
+                    M->porcelanato -= qntd;
                     break;
                 }
             }
@@ -606,22 +630,22 @@ void add(Materiais M, Pessoas T[], Preco pr)
                 printf("Quantos Sacos de Cimento serao necessario ?\n");
                 printf("0- VOLTAR\n");
                 scanf("%d", &qntd);
-                if (qntd > M.saco_cimento)
+                if (qntd > M->saco_cimento)
                 {
                     printf("Nao ha estoque para esse pedido!\n");
                     printf("Deseja Verificar seu Estoque? [S/N]\n");
                     scanf("%c", &escolha);
                     if (escolha == 'S')
-                        consultarestoque(&M, pr, 1);
+                        consultarestoque(M, pr, 1);
 
                     if (escolha == 'N')
                         continue;
                 }
                 else
                 {
-                    valor += pr.saco_cimento_price * qntd;
+                    valor += pr->saco_cimento_price * qntd;
                     product[2] += qntd;
-                    M.saco_cimento -= qntd;
+                    M->saco_cimento -= qntd;
                     break;
                 }
             }
@@ -635,21 +659,21 @@ void add(Materiais M, Pessoas T[], Preco pr)
                 printf("Quantos saco_argamassa o Cliente precisa?\n");
                 printf("0- VOLTAR\n");
                 scanf("%d", &qntd);
-                if (qntd > M.saco_argamassa)
+                if (qntd > M->saco_argamassa)
                 {
                     printf("Nao ha estoque para esse pedido!\n");
                     printf("Deseja Verificar seu Estoque? [S/N]\n");
                     scanf("%c", &escolha);
                     if (escolha == 'S')
-                        consultarestoque(&M, pr, 1);
+                        consultarestoque(M, pr, 1);
                     if (escolha == 'N')
                         continue;
                 }
                 else
                 {
-                    valor += pr.saco_argamassa_price * qntd;
+                    valor += pr->saco_argamassa_price * qntd;
                     product[3] += qntd;
-                    M.saco_argamassa -= qntd;
+                    M->saco_argamassa -= qntd;
                     break;
                 }
             }
@@ -663,51 +687,56 @@ void add(Materiais M, Pessoas T[], Preco pr)
                 printf("Quantos vergalhoes o Cliente precisa?");
                 printf("0- VOLTAR\n");
                 scanf("%d", &qntd);
-                if (qntd > M.vergalhoes)
+                if (qntd > M->vergalhoes)
                 {
                     printf("Nao ha estoque para esse pedido!\n");
                     printf("Deseja Verificar seu Estoque? [S/N]\n");
                     scanf("%c", &escolha);
                     if (escolha == 'S')
-                        consultarestoque(&M, pr, 1);
+                        consultarestoque(M, pr, 1);
                     if (escolha == 'N')
                         continue;
                 }
                 else
                 {
-                    valor += pr.vergalhoes_price * qntd;
+                    valor += pr->vergalhoes_price * qntd;
                     product[4] = qntd;
-                    M.vergalhoes -= qntd;
+                    M->vergalhoes -= qntd;
                     break;
                 }
             }
         }
         if (material == 6)
         {
-            consultarestoque(&M, pr, 1);
+            consultarestoque(M, pr, 1);
         }
         if (material == 7)
         {
-            gerar_orcamento_txt(product, &pr, buscpf, T);
+            gerar_orcamento_txt(product, pr, buscpf, T);
             system("pause");
             system("cls");
+            printf("==================================\n");
+            printf("     CRIACAO DE NOVO ORCAMENTO    \n");
+            printf("==================================\n");
             printf("Deseja Sair? [S/N]\n");
             setbuf(stdin, NULL);
             scanf("%c", &escolha);
             if (escolha == 'S')
+            {
                 system("cls");
-            break;
+                break;
+            }
             if (escolha == 'N')
                 continue;
         }
         if (material == 9)
         {
             // Se cancelar o orcamento, tudo reseta e os valores voltam ao normal
-            M.Tijolo += product[0];
-            M.porcelanato += product[1];
-            M.saco_cimento += product[2];
-            M.saco_argamassa += product[3];
-            M.vergalhoes += product[4];
+            M->Tijolo += product[0];
+            M->porcelanato += product[1];
+            M->saco_cimento += product[2];
+            M->saco_argamassa += product[3];
+            M->vergalhoes += product[4];
             system("cls");
             break;
         }
@@ -1000,7 +1029,6 @@ void mostra1(struct Pessoas T[])
                 system("pause");
                 continue;
             }
-
         }
         if (opcao == 3)
         {
@@ -1021,15 +1049,16 @@ void mostra1(struct Pessoas T[])
         }
         if (opcao == 9)
         {
+            system("pause");
             break;
         }
-        if (opcao != 1 && opcao != 2 && opcao != 3 && opcao != 9 )
+        if (opcao != 1 && opcao != 2 && opcao != 3 && opcao != 9)
         {
             printf("OPCAO INVALIDA!!!\n");
             system("pause");
             continue;
         }
-        
+
         printf("-------------------------------------\n");
         printf("|Nome: %s \n|CPF: ", T[ID].Nome);
         formatacpf(T[ID].Cpf);
@@ -1078,9 +1107,9 @@ void menu()
         if (opcao == 5)
             mostra1(P);
         if (opcao == 6)
-            add(M, P, pr);
+            add(&M, P, &pr);
         if (opcao == 7)
-            consultarestoque(&M, pr, 0);
+            consultarestoque(&M, &pr, 0);
         if (opcao == 9)
         {
             salvar(P, M, pr); // SALVA TODAS AS MODIFICAÇOES.
